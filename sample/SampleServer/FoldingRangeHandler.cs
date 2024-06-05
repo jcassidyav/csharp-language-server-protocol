@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
@@ -10,7 +10,7 @@ namespace SampleServer
     {
         public FoldingRangeRegistrationOptions GetRegistrationOptions() =>
             new FoldingRangeRegistrationOptions {
-                DocumentSelector = TextDocumentSelector.ForLanguage("csharp")
+                DocumentSelector = TextDocumentSelector.ForLanguage("Gravity")
             };
 
         public Task<Container<FoldingRange>?> Handle(
@@ -30,7 +30,7 @@ namespace SampleServer
             );
 
         public FoldingRangeRegistrationOptions GetRegistrationOptions(FoldingRangeCapability capability, ClientCapabilities clientCapabilities) => new FoldingRangeRegistrationOptions {
-            DocumentSelector = TextDocumentSelector.ForLanguage("csharp")
+            DocumentSelector = TextDocumentSelector.ForLanguage("Gravity")
         };
     }
 }

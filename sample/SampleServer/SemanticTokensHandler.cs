@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,7 +55,10 @@ namespace SampleServer
             using var typesEnumerator = RotateEnum(SemanticTokenType.Defaults).GetEnumerator();
             using var modifiersEnumerator = RotateEnum(SemanticTokenModifier.Defaults).GetEnumerator();
             // you would normally get this from a common source that is managed by current open editor, current active editor, etc.
-            var content = await File.ReadAllTextAsync(DocumentUri.GetFileSystemPath(identifier), cancellationToken).ConfigureAwait(false);
+
+            var content = File.ReadAllText(DocumentUri.GetFileSystemPath(identifier));
+            
+          //  var content = await File.ReadAllTextAsync(DocumentUri.GetFileSystemPath(identifier), cancellationToken).ConfigureAwait(false);
             await Task.Yield();
 
             foreach (var (line, text) in content.Split('\n').Select((text, line) => ( line, text )))
@@ -95,7 +98,7 @@ namespace SampleServer
         {
             return new SemanticTokensRegistrationOptions
             {
-                DocumentSelector = TextDocumentSelector.ForLanguage("csharp"),
+                DocumentSelector = TextDocumentSelector.ForLanguage("Gravity"),
                 Legend = new SemanticTokensLegend
                 {
                     TokenModifiers = capability.TokenModifiers,

@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
-
+using System.Diagnostics;
 // ReSharper disable UnusedParameter.Local
 
 namespace SampleServer
@@ -21,11 +21,11 @@ namespace SampleServer
 
         private static async Task MainAsync(string[] args)
         {
-            // Debugger.Launch();
-            // while (!Debugger.IsAttached)
-            // {
-            //     await Task.Delay(100);
-            // }
+             Debugger.Launch();
+             while (!Debugger.IsAttached)
+                {
+                     await Task.Delay(100);
+                }
 
             Log.Logger = new LoggerConfiguration()
                         .Enrich.FromLogContext()
@@ -141,6 +141,8 @@ namespace SampleServer
                                 manager.OnNext(new WorkDoneProgressReport { Message = "doing things... 56789" });
 
                                 var logger = languageServer.Services.GetService<ILogger<Foo>>();
+
+                                /*
                                 var configuration = await languageServer.Configuration.GetConfiguration(
                                     new ConfigurationItem
                                     {
@@ -166,6 +168,8 @@ namespace SampleServer
                                 }
 
                                 logger.LogInformation("Scoped Config: {@Config}", scopedConfig);
+                                */
+                                logger?.LogInformation("OnStarted called");
                             }
                         )
             ).ConfigureAwait(false);

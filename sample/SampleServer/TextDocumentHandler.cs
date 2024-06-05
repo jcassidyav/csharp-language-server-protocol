@@ -27,7 +27,7 @@ namespace SampleServer
 
         private readonly TextDocumentSelector _textDocumentSelector = new TextDocumentSelector(
             new TextDocumentFilter {
-                Pattern = "**/*.cs"
+                Pattern = "**/*.gt"
             }
         );
 
@@ -75,7 +75,7 @@ namespace SampleServer
             Save = new SaveOptions() { IncludeText = true }
         };
 
-        public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri) => new TextDocumentAttributes(uri, "csharp");
+        public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri) => new TextDocumentAttributes(uri, "Gravity");
     }
 
     internal class MyDocumentSymbolHandler : IDocumentSymbolHandler
@@ -86,7 +86,7 @@ namespace SampleServer
         )
         {
             // you would normally get this from a common source that is managed by current open editor, current active editor, etc.
-            var content = await File.ReadAllTextAsync(DocumentUri.GetFileSystemPath(request), cancellationToken).ConfigureAwait(false);
+            var content = File.ReadAllText(DocumentUri.GetFileSystemPath(request));
             var lines = content.Split('\n');
             var symbols = new List<SymbolInformationOrDocumentSymbol>();
             for (var lineIndex = 0; lineIndex < lines.Length; lineIndex++)
@@ -129,7 +129,7 @@ namespace SampleServer
         }
 
         public DocumentSymbolRegistrationOptions GetRegistrationOptions(DocumentSymbolCapability capability, ClientCapabilities clientCapabilities) => new DocumentSymbolRegistrationOptions {
-            DocumentSelector = TextDocumentSelector.ForLanguage("csharp")
+            DocumentSelector = TextDocumentSelector.ForLanguage("Gravity")
         };
     }
 
