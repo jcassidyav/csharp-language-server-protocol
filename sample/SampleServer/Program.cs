@@ -8,12 +8,16 @@ using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
 using System.Diagnostics;
+using OmniSharp.Extensions.JsonRpc;
+using Thousand.LSP.Extensions;
 // ReSharper disable UnusedParameter.Local
 
 namespace SampleServer
 {
     internal class Program
     {
+        private static OnUnhandledExceptionHandler exceptionHandler;
+
         private static void Main(string[] args)
         {
             MainAsync(args).Wait();
@@ -26,10 +30,10 @@ namespace SampleServer
                 {
                      await Task.Delay(100);
                 }
-
+         
             Log.Logger = new LoggerConfiguration()
                         .Enrich.FromLogContext()
-                        .WriteTo.File("log.txt", rollingInterval: RollingInterval.Day)
+                        .WriteTo.File("LSP_Sample_log.txt", rollingInterval: RollingInterval.Day)
                         .MinimumLevel.Verbose()
                         .CreateLogger();
 
@@ -54,6 +58,8 @@ namespace SampleServer
                        .WithHandler<MyWorkspaceSymbolsHandler>()
                        .WithHandler<MyDocumentSymbolHandler>()
                        .WithHandler<SemanticTokensHandler>()
+                       .WithHandler<PreviewHandler>()
+                       .WithUnhandledExceptionHandler(exceptionHandler)
                        .WithServices(x => x.AddLogging(b => b.SetMinimumLevel(LogLevel.Trace)))
                        .WithServices(
                             services =>
@@ -94,8 +100,6 @@ namespace SampleServer
                                 );
                                 workDone = manager;
 
-                                await Task.Delay(2000).ConfigureAwait(false);
-
                                 manager.OnNext(
                                     new WorkDoneProgressReport
                                     {
@@ -116,8 +120,6 @@ namespace SampleServer
                                     }
                                 );
 
-                                await Task.Delay(2000).ConfigureAwait(false);
-
                                 workDone.OnNext(
                                     new WorkDoneProgressReport
                                     {
@@ -135,9 +137,9 @@ namespace SampleServer
                                                                         .ConfigureAwait(false);
 
                                 manager.OnNext(new WorkDoneProgressReport { Message = "doing things..." });
-                                await Task.Delay(10000).ConfigureAwait(false);
+
                                 manager.OnNext(new WorkDoneProgressReport { Message = "doing things... 1234" });
-                                await Task.Delay(10000).ConfigureAwait(false);
+
                                 manager.OnNext(new WorkDoneProgressReport { Message = "doing things... 56789" });
 
                                 var logger = languageServer.Services.GetService<ILogger<Foo>>();

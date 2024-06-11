@@ -27,7 +27,7 @@ namespace SampleServer
 
         private readonly TextDocumentSelector _textDocumentSelector = new TextDocumentSelector(
             new TextDocumentFilter {
-                Pattern = "**/*.gt"
+                Pattern = "**/*.gt", Language = "Gravity"
             }
         );
 
@@ -52,6 +52,9 @@ namespace SampleServer
         public override async Task<Unit> Handle(DidOpenTextDocumentParams notification, CancellationToken token)
         {
             await Task.Yield();
+
+            var projectId = notification.TextDocument.Uri.Query;
+            
             _logger.LogInformation("Hello world!");
             await _configuration.GetScopedConfiguration(notification.TextDocument.Uri, token).ConfigureAwait(false);
             return Unit.Value;
